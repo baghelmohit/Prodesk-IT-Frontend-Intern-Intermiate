@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Frontend Quiz App</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f1f5f9;
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .container {
+      background-color: #1e293b;
+      border-radius: 12px;
+      padding: 2rem;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+      width: 90%;
+      max-width: 500px;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .header h1 {
+      font-size: 1.8rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .subject-list button {
+      background-color: #334155;
+      color: #fff;
+      border: none;
+      padding: 1rem;
+      margin: 0.5rem 0;
+      border-radius: 8px;
+      font-size: 1rem;
+      width: 100%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .subject-list button:hover {
+      background-color: #475569;
+    }
+
+    .question-section {
+      display: none;
+      flex-direction: column;
+    }
+
+    .question-text {
+      margin-bottom: 1rem;
+    }
+
+    .answer-list button {
+      background-color: #334155;
+      color: #fff;
+      border: none;
+      padding: 0.8rem;
+      margin: 0.5rem 0;
+      border-radius: 8px;
+      font-size: 1rem;
+      width: 100%;
+      cursor: pointer;
+    }
+
+    .answer-list button:hover {
+      background-color: #64748b;
+    }
+
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="container" role="main">
+    <div class="header">
+      <h1>Welcome to the <strong>Frontend Quiz!</strong></h1>
+      <p>Pick a subject to get started.</p>
+    </div>
+
+    <div class="subject-list" id="subject-list">
+      <button onclick="startQuiz('html')">🧾 HTML</button>
+      <button onclick="startQuiz('css')">🎨 CSS</button>
+      <button onclick="startQuiz('js')">📜 JavaScript</button>
+      <button onclick="startQuiz('a11y')">♿ Accessibility</button>
+    </div>
+
+    <div class="question-section" id="question-section">
+      <div class="question-text" id="question-text" aria-live="polite"></div>
+      <div class="answer-list" id="answer-list"></div>
+      <button id="next-btn" class="hidden" onclick="nextQuestion()">Next</button>
+    </div>
+  </div>
+
+  <script>
+    const questions = {
+      html: [
+        {
+          q: "What does HTML stand for?",
+          options: [
+            "Hyper Text Markup Language",
+            "Home Tool Markup Language",
+            "Hyperlinks and Text Markup Language",
+            "None of the above"
+          ],
+          answer: 0
+        },
+        {
+          q: "Which tag is used to link an external stylesheet?",
+          options: ["<script>", "<style>", "<link>", "<css>"],
+          answer: 2
+        }
+      ],
+      css: [
+        {
+          q: "Which CSS property changes text color?",
+          options: ["font-color", "text-color", "color", "text-style"],
+          answer: 2
+        },
+        {
+          q: "How can change the background color of an element",
+          options: ["background color","color","Both A and B","None the Above"],
+          answer: 0
+        },
+        {
+          q: "Hpw many ways can CSS be written in ?",
+          options: ["1","2","3","4"],
+          answer: 2
+        }
+      ],
+      js: [
+        {
+          q: "Which keyword is used to declare a variable in JavaScript?",
+          options: ["var", "int", "string", "float"],
+          answer: 0
+        },
+        {
+          q: "What is the original name of javaScript?",
+          options: ["Mocha","Livescript","ECMAScript","JScript"],
+          answer: 0
+        }
+      ],
+      a11y: [
+        {
+          q: "What does ARIA stand for?",
+          options: [
+            "Accessible Rich Internet Applications",
+            "Advanced Rich Internet Attributes",
+            "Applied Responsive Interface Accessibility",
+            "None of the above"
+          ],
+          answer: 0
+        }
+      ]
+    };
+
+    let currentSubject = '';
+    let currentQuestion = 0;
+
+    function startQuiz(subject) {
+      currentSubject = subject;
+      currentQuestion = 0;
+      document.getElementById('subject-list').classList.add('hidden');
+      document.getElementById('question-section').style.display = 'flex';
+      showQuestion();
+    }
+
+    function showQuestion() {
+      const qObj = questions[currentSubject][currentQuestion];
+      document.getElementById('question-text').textContent = qObj.q;
+      const answerList = document.getElementById('answer-list');
+      answerList.innerHTML = '';
+
+      qObj.options.forEach((option, index) => {
+        const btn = document.createElement('button');
+        btn.textContent = option;
+        btn.setAttribute('aria-label', option);
+        btn.onclick = () => selectAnswer(index);
+        answerList.appendChild(btn);
+      });
+    }
+
+    function selectAnswer(selected) {
+      const correct = questions[currentSubject][currentQuestion].answer;
+      const buttons = document.getElementById('answer-list').children;
+      Array.from(buttons).forEach((btn, idx) => {
+        if (idx === correct) {
+          btn.style.backgroundColor = '#22c55e';
+        } else if (idx === selected) {
+          btn.style.backgroundColor = '#ef4444';
+        } else {
+          btn.style.backgroundColor = '#334155';
+        }
+        btn.disabled = true;
+      });
+      document.getElementById('next-btn').classList.remove('hidden');
+    }
+
+    function nextQuestion() {
+      currentQuestion++;
+      const qSet = questions[currentSubject];
+      if (currentQuestion < qSet.length) {
+        document.getElementById('next-btn').classList.add('hidden');
+        showQuestion();
+      } else {
+        document.getElementById('question-section').innerHTML =
+          `<h2 style="text-align:center">Quiz Completed!</h2><p style="text-align:center">Well done!</p>`;
+      }
+    }
+  </script>
+</body>
+</html>
