@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Multi-Step Form with Summary</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f0f4ff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .container {
+      background-color: #fff;
+      display: flex;
+      border-radius: 12px;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+      width: 900px;
+      max-width: 100%;
+    }
+    .sidebar {
+      background: linear-gradient(to bottom, #483EFF, #2F2CE9);
+      color: white;
+      padding: 30px;
+      width: 250px;
+    }
+    .step {
+      display: flex;
+      align-items: center;
+      margin-bottom: 30px;
+      cursor: pointer;
+    }
+    .step-number {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: transparent;
+      border: 1px solid white;
+      color: white;
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      font-weight: bold;
+      margin-right: 15px;
+    }
+    .step.active .step-number {
+      background: #BEE3F8;
+      color: #000;
+    }
+    .step-label {
+      font-size: 14px;
+      text-transform: uppercase;
+    }
+    .form-content {
+      padding: 40px;
+      flex: 1;
+    }
+    .form-step {
+      display: none;
+    }
+    .form-step.active {
+      display: block;
+    }
+    h2 {
+      color: #02295a;
+      margin-bottom: 10px;
+    }
+    .form-content p {
+      color: gray;
+      margin-bottom: 30px;
+    }
+    input[type="text"], input[type="email"], input[type="tel"] {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 20px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 16px;
+    }
+    button {
+      padding: 10px 20px;
+      background-color: #02295a;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      float: right;
+    }
+    .summary-box p {
+      margin: 10px 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="sidebar">
+      <div class="step active" onclick="goToStep(0)">
+        <div class="step-number">1</div>
+        <div class="step-label">Your Info</div>
+      </div>
+      <div class="step" onclick="goToStep(1)">
+        <div class="step-number">2</div>
+        <div class="step-label">Select Plan</div>
+      </div>
+      <div class="step" onclick="goToStep(2)">
+        <div class="step-number">3</div>
+        <div class="step-label">Add-Ons</div>
+      </div>
+      <div class="step" onclick="goToStep(3)">
+        <div class="step-number">4</div>
+        <div class="step-label">Summary</div>
+      </div>
+    </div>
+
+    <div class="form-content">
+      <!-- STEP 1 -->
+      <div class="form-step active">
+        <h2>Personal Info</h2>
+        <p>Please provide your name, email address, and phone number.</p>
+        <input type="text" id="name" placeholder="e.g. Stephen King" />
+        <input type="email" id="email" placeholder="e.g. stephenking@lorem.com" />
+        <input type="tel" id="phone" placeholder="e.g. +1 234 567 890" />
+        <button onclick="nextStep()">Next Step</button>
+      </div>
+
+      <!-- STEP 2 -->
+      <div class="form-step">
+        <h2>Select Plan</h2>
+        <p>Choose your subscription plan.</p>
+        <input type="text" id="plan" placeholder="Plan name (e.g. Pro, Basic)" />
+        <button onclick="nextStep()">Next Step</button>
+      </div>
+
+      <!-- STEP 3 -->
+      <div class="form-step">
+        <h2>Add-Ons</h2>
+        <p>Pick additional services to add.</p>
+        <input type="text" id="addon1" placeholder="Add-On 1" />
+        <input type="text" id="addon2" placeholder="Add-On 2" />
+        <button onclick="nextStep()">Next Step</button>
+      </div>
+
+      <!-- STEP 4 -->
+      <div class="form-step">
+        <h2>Summary</h2>
+        <p>Review and confirm your selections.</p>
+        <div class="summary-box">
+          <p><strong>Name:</strong> <span id="summary-name"></span></p>
+          <p><strong>Email:</strong> <span id="summary-email"></span></p>
+          <p><strong>Phone:</strong> <span id="summary-phone"></span></p>
+          <p><strong>Plan:</strong> <span id="summary-plan"></span></p>
+          <p><strong>Add-Ons:</strong> <span id="summary-addons"></span></p>
+        </div>
+        <button onclick="submitForm()">Submit</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let currentStep = 0;
+    const steps = document.querySelectorAll(".form-step");
+    const sidebarSteps = document.querySelectorAll(".step");
+
+    function showStep(stepIndex) {
+      steps.forEach((step, index) => {
+        step.classList.toggle("active", index === stepIndex);
+        sidebarSteps[index].classList.toggle("active", index === stepIndex);
+      });
+      currentStep = stepIndex;
+
+      if (stepIndex === 3) {
+        updateSummary();
+      }
+    }
+
+    function nextStep() {
+      if (currentStep < steps.length - 1) {
+        showStep(currentStep + 1);
+      }
+    }
+
+    function goToStep(stepIndex) {
+      showStep(stepIndex);
+    }
+
+    function updateSummary() {
+      document.getElementById('summary-name').innerText = document.getElementById('name').value;
+      document.getElementById('summary-email').innerText = document.getElementById('email').value;
+      document.getElementById('summary-phone').innerText = document.getElementById('phone').value;
+      document.getElementById('summary-plan').innerText = document.getElementById('plan').value;
+      const addon1 = document.getElementById('addon1').value;
+      const addon2 = document.getElementById('addon2').value;
+      const addons = [addon1, addon2].filter(Boolean).join(', ');
+      document.getElementById('summary-addons').innerText = addons || "None";
+    }
+
+    function submitForm() {
+      alert("Form submitted successfully!");
+      location.reload(); // Page will refresh after submission
+    }
+
+    showStep(0);
+  </script>
+</body>
+</html>
