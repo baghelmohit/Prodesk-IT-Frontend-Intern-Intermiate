@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Password Generator</title>
+  <style>
+    body {
+      background-color: #1e1e1e;
+      color: #ffffff;
+      font-family: 'Courier New', monospace;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .container {
+      background-color: #2a2a2a;
+      padding: 2rem;
+      border-radius: 10px;
+      box-shadow: 0 0 15px #00ff88;
+      width: 350px;
+    }
+
+    .output {
+      display: flex;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+
+    .output input {
+      flex: 1;
+      padding: 0.5rem;
+      border: none;
+      border-radius: 5px;
+      font-size: 1rem;
+      margin-right: 0.5rem;
+      color: #000;
+    }
+
+    .output button {
+      padding: 0.5rem;
+      font-size: 1.2rem;
+      background-color: #00ff88;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .settings label {
+      display: block;
+      margin: 0.5rem 0;
+    }
+
+    input[type="range"] {
+      width: 100%;
+    }
+
+    button {
+      background-color: #00ff88;
+      border: none;
+      padding: 0.7rem;
+      width: 100%;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+      margin-top: 1rem;
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 1rem;
+      font-size: 0.8rem;
+      color: #00ff88;
+    }
+
+    #mode-switch {
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Password Generator / Manual Entry</h2>
+
+    <div id="mode-switch">
+      <label><input type="checkbox" id="manualMode"> Enter password manually</label>
+    </div>
+
+    <div class="output">
+      <input type="text" id="password" placeholder="Enter or generate password" />
+      <button onclick="copyPassword()">📋</button>
+    </div>
+
+    <div class="settings" id="settings">
+      <h3>Customize your password</h3>
+      <label><input type="checkbox" id="uppercase" checked> Uppercase</label>
+      <label><input type="checkbox" id="lowercase" checked> Lowercase</label>
+      <label><input type="checkbox" id="numbers" checked> Numeric</label>
+      <label><input type="checkbox" id="symbols"> Symbols</label>
+      <label>Password Length: <span id="length-value">12</span></label>
+      <input type="range" id="length" min="4" max="32" value="12">
+    </div>
+
+    <button onclick="generatePassword()" id="generateBtn">Generate</button>
+    <footer>Made with ❤️ by Mohit Baghel </footer>
+  </div>
+
+  <script>
+    function generatePassword() {
+      const length = document.getElementById("length").value;
+      const hasUpper = document.getElementById("uppercase").checked;
+      const hasLower = document.getElementById("lowercase").checked;
+      const hasNumber = document.getElementById("numbers").checked;
+      const hasSymbol = document.getElementById("symbols").checked;
+
+      const upper = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+      const lower = "abcdefghijklmnopqrstuvwxyz";
+      const number = "0123456789";
+      const symbol = "!@#$%^&*()_+-=[]{}|;:,.<>?";
+
+      let validChars = "";
+      if (hasUpper) validChars += upper;
+      if (hasLower) validChars += lower;
+      if (hasNumber) validChars += number;
+      if (hasSymbol) validChars += symbol;
+
+      if (validChars === "") {
+        alert("Please select at least one character type!");
+        return;
+      }
+
+      let password = "";
+      for (let i = 0; i < length; i++) {
+        const index = Math.floor(Math.random() * validChars.length);
+        password += validChars[index];
+      }
+
+      document.getElementById("password").value = password;
+    }
+
+    function copyPassword() {
+      const input = document.getElementById("password");
+      if (input.value.trim() === "") {
+        alert("Nothing to copy!");
+        return;
+      }
+      input.select();
+      document.execCommand("copy");
+      alert("Password copied to clipboard!");
+    }
+
+    document.getElementById("length").addEventListener("input", function () {
+      document.getElementById("length-value").textContent = this.value;
+    });
+
+    document.getElementById("manualMode").addEventListener("change", function () {
+      const isManual = this.checked;
+      document.getElementById("settings").style.display = isManual ? "none" : "block";
+      document.getElementById("generateBtn").style.display = isManual ? "none" : "block";
+      document.getElementById("password").readOnly = !isManual;
+      document.getElementById("password").value = "";
+    });
+  </script>
+</body>
+</html>
