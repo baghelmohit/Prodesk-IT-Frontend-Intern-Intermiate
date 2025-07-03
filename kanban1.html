@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kanban Task Management</title>
+  <style>
+    :root {
+      --bg-color: #f4f4f9;
+      --text-color: #222;
+      --column-bg: #e0e0e0;
+      --card-bg: #fff;
+      --accent: #4caf50;
+    }
+
+    body.dark {
+      --bg-color: #1e1e2f;
+      --text-color: #fff;
+      --column-bg: #2a2a3d;
+      --card-bg: #33334d;
+      --accent: #81c784;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      font-family: 'Segoe UI', Tahoma, sans-serif;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem;
+      background-color: var(--column-bg);
+      position: sticky;
+      top: 0;
+    }
+
+    .kanban-container {
+      display: flex;
+      gap: 1rem;
+      padding: 1rem;
+      overflow-x: auto;
+    }
+
+    .column {
+      background-color: var(--column-bg);
+      padding: 1rem;
+      border-radius: 8px;
+      min-width: 280px;
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      max-height: 80vh;
+      overflow-y: auto;
+      transition: transform 0.2s ease;
+    }
+
+    .column:hover {
+      transform: translateY(-2px);
+    }
+
+    .column h3 {
+      margin: 0 0 0.5rem 0;
+      font-size: 1.2rem;
+    }
+
+    .task {
+      background-color: var(--card-bg);
+      padding: 0.7rem;
+      margin-bottom: 0.5rem;
+      border-radius: 6px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    }
+
+    .toggle-btn, .add-task-btn {
+      cursor: pointer;
+      padding: 0.4rem 0.8rem;
+      border: none;
+      border-radius: 4px;
+      background: var(--accent);
+      color: white;
+      font-weight: bold;
+    }
+
+    .add-task-btn {
+      margin-top: auto;
+      background: var(--accent);
+    }
+
+    .toggle-btn {
+      background: var(--accent);
+    }
+
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h2>Kanban Board</h2>
+    <button class="toggle-btn" onclick="toggleMode()">🌙 Toggle Mode</button>
+  </div>
+  <div class="kanban-container">
+    <div class="column" id="todo">
+      <h3>To Do</h3>
+      <div class="task">Build UI for onboarding</div>
+      <div class="task">Write project plan</div>
+      <button class="add-task-btn" onclick="addTask('todo')">+ Add Task</button>
+    </div>
+    <div class="column" id="doing">
+      <h3>Doing</h3>
+      <div class="task">Design wireframes</div>
+      <button class="add-task-btn" onclick="addTask('doing')">+ Add Task</button>
+    </div>
+    <div class="column" id="done">
+      <h3>Done</h3>
+      <div class="task">Setup repository</div>
+      <button class="add-task-btn" onclick="addTask('done')">+ Add Task</button>
+    </div>
+  </div>
+
+  <script>
+    function toggleMode() {
+      document.body.classList.toggle('dark');
+    }
+
+    function addTask(columnId) {
+      const taskText = prompt("Enter task description:");
+      if (taskText) {
+        const column = document.getElementById(columnId);
+        const task = document.createElement("div");
+        task.className = "task";
+        task.innerText = taskText;
+        const addBtn = column.querySelector(".add-task-btn");
+        column.insertBefore(task, addBtn);
+      }
+    }
+  </script>
+</body>
+</html>
