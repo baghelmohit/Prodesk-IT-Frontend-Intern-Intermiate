@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Entertainment Web App</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #0b0b1f;
+      color: #fff;
+      display: flex;
+    }
+
+    .sidebar {
+      width: 70px;
+      background: #111;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding-top: 20px;
+      position: fixed;
+    }
+
+    .sidebar-icon {
+      width: 30px;
+      height: 30px;
+      margin: 20px 0;
+      opacity: 0.7;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .sidebar-icon:hover {
+      opacity: 1;
+    }
+
+    .container {
+      margin-left: 80px;
+      padding: 20px;
+      flex-grow: 1;
+    }
+
+    .search-bar input {
+      width: 100%;
+      padding: 10px;
+      border: none;
+      border-radius: 5px;
+    }
+
+    h2 {
+      margin-top: 20px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .card {
+      background: #1a1a2e;
+      border-radius: 5px;
+      overflow: hidden;
+      transition: transform 0.2s;
+    }
+
+    .card:hover {
+      transform: scale(1.05);
+    }
+
+    .card img {
+      width: 100%;
+      display: block;
+    }
+
+    .card-title {
+      padding: 5px;
+      font-size: 0.85em;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="sidebar">
+    <!-- Icons can be replaced with actual icon images or font icons -->
+    <img class="sidebar-icon" src="https://img.icons8.com/ios-glyphs/30/ffffff/home.png" alt="Home" title="Home">
+    <img class="sidebar-icon" src="https://img.icons8.com/ios-glyphs/30/ffffff/fire-element.png" alt="Trending" title="Trending">
+    <img class="sidebar-icon" src="https://img.icons8.com/ios-glyphs/30/ffffff/clapperboard.png" alt="Movies" title="Movies">
+    <img class="sidebar-icon" src="https://img.icons8.com/ios-glyphs/30/ffffff/retro-tv.png" alt="TV Series" title="TV Series">
+    <img class="sidebar-icon" src="https://img.icons8.com/ios-glyphs/30/ffffff/bookmark-ribbon.png" alt="Bookmarks" title="Bookmarks">
+  </div>
+
+  <div class="container">
+    <div class="search-bar">
+      <input type="text" id="search" placeholder="Search for movies or TV series" oninput="render()"/>
+    </div>
+
+    <h2>Trending</h2>
+    <div id="trending" class="grid"></div>
+
+    <h2>Recommended for you</h2>
+    <div id="recommended" class="grid"></div>
+  </div>
+
+  <script>
+    const data = [
+      { title: "Beyond Earth", type: "Movie", year: 2020, trending: true, image: "Beyond.jpg" },
+      { title: "Bottom Gear", type: "Movie", year: 2021, trending: true, image: "Bottom.jpg" },
+      { title: "Undiscovered Cities", type: "TV Series", year: 2019, trending: true, image: "Undiscoverd.jpg" },
+      { title: "The Great Lands", type: "Movie", year: 2019, trending: false, image: "Great.jpg" },
+      { title: "The Diary", type: "TV Series", year: 2017, trending: false, image: "Diary.jpg" },
+      { title: "Earth's Untouched", type: "Movie", year: 2017, trending: false, image: "Untouched.jpg" },
+      { title: "No Land Beyond", type: "Movie", year: 2019, trending: false, image: "Land.jpg" },
+      { title: "During The Hunt", type: "TV Series", year: 2016, trending: false, image: "Hunts.jpg" }
+    ];
+
+    function render() {
+      const searchTerm = document.getElementById("search").value.toLowerCase();
+      const trendingEl = document.getElementById("trending");
+      const recommendedEl = document.getElementById("recommended");
+
+      trendingEl.innerHTML = "";
+      recommendedEl.innerHTML = "";
+
+      const filtered = data.filter(item => item.title.toLowerCase().includes(searchTerm));
+
+      filtered.filter(d => d.trending).forEach(item => {
+        trendingEl.innerHTML += createCard(item);
+      });
+
+      filtered.filter(d => !d.trending).forEach(item => {
+        recommendedEl.innerHTML += createCard(item);
+      });
+    }
+
+    function createCard(item) {
+      return `
+        <div class="card">
+          <img src="${item.image}" alt="${item.title}"/>
+          <div class="card-title">${item.title} (${item.year})</div>
+        </div>
+      `;
+    }
+
+    render();
+  </script>
+</body>
+</html>
