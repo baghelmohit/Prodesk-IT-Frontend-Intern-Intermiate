@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Planets Fact Site</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #0b0b1f;
+      color: #fff;
+    }
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 2rem;
+      background-color: #111133;
+    }
+    header h1 {
+      font-size: 1.5rem;
+    }
+    nav {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    nav button {
+      background: none;
+      border: none;
+      color: #fff;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+    .container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 2rem;
+    }
+    .planet-image {
+      width: 200px;
+      height: 200px;
+      border-radius: 50%;
+      margin-bottom: 1rem;
+      transition: background 0.5s;
+    }
+    .info {
+      max-width: 600px;
+      text-align: center;
+    }
+    .tabs {
+      margin: 1rem 0;
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .tabs button {
+      padding: 0.5rem 1rem;
+      background-color: #222244;
+      border: 1px solid #555;
+      color: #fff;
+      cursor: pointer;
+    }
+    .tabs button.active {
+      background-color: #673ab7;
+    }
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 1rem;
+      margin-top: 2rem;
+      width: 100%;
+      max-width: 600px;
+    }
+    .stat {
+      background: #111133;
+      padding: 1rem;
+      text-align: center;
+      border: 1px solid #333;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>The Planets</h1>
+    <nav>
+      <button onclick="showPlanet('Earth')">Earth</button>
+      <button onclick="showPlanet('Mars')">Mars</button>
+      <button onclick="showPlanet('Jupiter')">Jupiter</button>
+      <button onclick="showPlanet('Saturn')">Saturn</button>
+      <button onclick="showPlanet('Venus')">Venus</button>
+      <button onclick="showPlanet('Mercury')">Mercury</button>
+      <button onclick="showPlanet('Uranus')">Uranus</button>
+      <button onclick="showPlanet('Neptune')">Neptune</button>
+    </nav>
+  </header>
+
+  <div class="container">
+    <div class="planet-image" id="planet-image"></div>
+    <div class="info">
+      <h2 id="planet-name">Earth</h2>
+      <p id="planet-desc">Third planet from the Sun and the only known planet to harbor life...</p>
+      <small>Source: <a href="https://en.wikipedia.org/wiki/Earth" target="_blank" style="color: #4fc3f7;">Wikipedia</a></small>
+    </div>
+
+    <div class="tabs">
+      <button class="active" onclick="showTab('overview')">Overview</button>
+      <button onclick="showTab('structure')">Internal Structure</button>
+      <button onclick="showTab('geology')">Surface Geology</button>
+    </div>
+
+    <div class="stats">
+      <div class="stat"><strong>0.99 Days</strong><br>Rotation Time</div>
+      <div class="stat"><strong>365.26 Days</strong><br>Revolution Time</div>
+      <div class="stat"><strong>6,371 KM</strong><br>Radius</div>
+      <div class="stat"><strong>16°C</strong><br>Average Temp</div>
+    </div>
+  </div>
+
+  <script>
+    const planetData = {
+      Earth: {
+        desc: "Third planet from the Sun and the only known planet to harbor life...",
+        link: "https://en.wikipedia.org/wiki/Earth",
+        color: "radial-gradient(circle at center, #4fc3f7, #0288d1)"
+      },
+      Mars: {
+        desc: "The fourth planet from the Sun. Known as the Red Planet...",
+        link: "https://en.wikipedia.org/wiki/Mars",
+        color: "radial-gradient(circle at center, #ff6f61, #b71c1c)"
+      },
+      Jupiter: {
+        desc: "The largest planet in our solar system...",
+        link: "https://en.wikipedia.org/wiki/Jupiter",
+        color: "radial-gradient(circle at center, #fbc02d, #ff8f00)"
+      },
+      Saturn: {
+        desc: "Famous for its beautiful ring system...",
+        link: "https://en.wikipedia.org/wiki/Saturn",
+        color: "radial-gradient(circle at center, #fff176, #f57f17)"
+      },
+      Venus: {
+        desc: "The second planet from the Sun, with a thick, toxic atmosphere...",
+        link: "https://en.wikipedia.org/wiki/Venus",
+        color: "radial-gradient(circle at center, #f8bbd0, #ec407a)"
+      },
+      Mercury: {
+        desc: "The smallest and innermost planet in the solar system...",
+        link: "https://en.wikipedia.org/wiki/Mercury_(planet)",
+        color: "radial-gradient(circle at center, #cfd8dc, #607d8b)"
+      },
+      Uranus: {
+        desc: "The seventh planet from the Sun with a sideways rotation...",
+        link: "https://en.wikipedia.org/wiki/Uranus",
+        color: "radial-gradient(circle at center, #80deea, #00acc1)"
+      },
+      Neptune: {
+        desc: "The farthest known planet from the Sun, known for its blue color...",
+        link: "https://en.wikipedia.org/wiki/Neptune",
+        color: "radial-gradient(circle at center, #5c6bc0, #1a237e)"
+      }
+    };
+
+    function showPlanet(name) {
+      const planet = planetData[name];
+      document.getElementById("planet-name").innerText = name;
+      document.getElementById("planet-desc").innerText = planet.desc;
+      document.querySelector(".info small a").href = planet.link;
+      document.getElementById("planet-image").style.background = planet.color;
+    }
+
+    function showTab(tab) {
+      document.querySelectorAll('.tabs button').forEach(btn => btn.classList.remove('active'));
+      const btn = Array.from(document.querySelectorAll('.tabs button')).find(b => b.innerText.toLowerCase().includes(tab));
+      if (btn) btn.classList.add('active');
+      alert(`You selected ${tab.replace(/^\w/, c => c.toUpperCase())}! (Add more content here if needed)`);
+    }
+
+    // Initialize Earth data
+    showPlanet('Earth');
+  </script>
+</body>
+</html>
