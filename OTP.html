@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>OTP Verification Component</title>
+  <style>
+    body {
+      background: linear-gradient(to right, #ffafbd, #c9ffbf);
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .container {
+      background-color: #1e1e2f;
+      color: #fff;
+      padding: 40px;
+      border-radius: 10px;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+      text-align: center;
+      width: 350px;
+    }
+
+    h2 {
+      margin-bottom: 20px;
+    }
+
+    .otp-inputs {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+
+    .otp-inputs input {
+      width: 50px;
+      height: 50px;
+      font-size: 24px;
+      text-align: center;
+      border: 2px solid #ccc;
+      border-radius: 8px;
+      background-color: #2e2e40;
+      color: white;
+      outline: none;
+      transition: 0.3s;
+    }
+
+    .otp-inputs input.success {
+      border-color: green;
+    }
+
+    .otp-inputs input.error {
+      border-color: red;
+    }
+
+    button {
+      padding: 10px 20px;
+      background-color: #4e9af1;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: 0.3s;
+    }
+
+    button:hover {
+      background-color: #367cd7;
+    }
+
+    .message {
+      margin-top: 15px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h2>Verify your email address</h2>
+    <p>Please enter the 4-digit OTP code</p>
+    <div class="otp-inputs">
+      <input type="text" maxlength="1">
+      <input type="text" maxlength="1">
+      <input type="text" maxlength="1">
+      <input type="text" maxlength="1">
+    </div>
+    <button onclick="verifyOTP()">Verify OTP</button>
+    <div class="message" id="message"></div>
+  </div>
+
+  <script>
+    const correctOTP = "7078"; // You can change this to simulate verification
+    const inputs = document.querySelectorAll(".otp-inputs input");
+    const messageDiv = document.getElementById("message");
+
+    // Auto-focus to next input
+    inputs.forEach((input, index) => {
+      input.addEventListener("input", () => {
+        if (input.value.length === 1 && index < inputs.length - 1) {
+          inputs[index + 1].focus();
+        }
+      });
+
+      input.addEventListener("keydown", (e) => {
+        if (e.key === "Backspace" && input.value === "" && index > 0) {
+          inputs[index - 1].focus();
+        }
+      });
+    });
+
+    function verifyOTP() {
+      const userOTP = Array.from(inputs).map(input => input.value).join("");
+
+      if (userOTP === correctOTP) {
+        inputs.forEach(input => {
+          input.classList.remove("error");
+          input.classList.add("success");
+        });
+        messageDiv.textContent = "✅ OTP Verified Successfully!";
+        messageDiv.style.color = "green";
+      } else {
+        inputs.forEach(input => {
+          input.classList.remove("success");
+          input.classList.add("error");
+        });
+        messageDiv.textContent = "❌ Invalid OTP";
+        messageDiv.style.color = "red";
+      }
+    }
+  </script>
+</body>
+</html>
